@@ -1,0 +1,458 @@
+/**
+ * the connect N class
+ */
+public class ConnectN {
+
+ 
+    public static final int MAX_HEIGHT = 16;
+  
+    public static final int MAX_WIDTH = 16;
+   
+    public static final int MIN_HEIGHT = 6;
+    
+    public static final int MIN_N = 4;
+    
+    public static final int MIN_WIDTH = 6;
+   
+    @SuppressWarnings("checkstyle:visibilitymodifier")
+    public java.lang.String title = "";
+   
+    private static int totalGames = 0;
+
+    private int width = 0;
+    
+    private int height = 0;
+   
+
+    private int n = 0;
+   
+    private int id = 0;
+    
+    private Player[][] board;
+    
+    private boolean started = false;
+  
+    private boolean ended = false;
+  
+    private Player winner = null;
+   
+    private boolean win() {
+        int counter = 0;
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[0].length - 1; j++) {
+                if (this.board[i][j] == this.board[i][j + 1] && this.board[i][j] != null) {
+                    counter++;
+                    if (counter == this.n - 1) {
+                        return true;
+                        }
+                } else {
+                    counter = 0;
+                }
+            }
+        }
+
+
+        counter = 0;
+        for (int i = 0; i < this.board[0].length; i++) {
+            for (int j = 0; j < this.board.length - 1; j++) {
+                if (this.board[j][i] == this.board[j + 1][i] && this.board[j][i] != null) {
+                    counter++;
+                    if (counter == this.n - 1) {
+                        return true;
+                    }
+                } else {
+                    counter = 0;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+
+    /**
+     * Create a new ConnectN board with uninitialized width, height, and N value.
+     */
+    public ConnectN() {
+        this.id = totalGames;
+        totalGames++;
+
+    }
+    /**
+     * Create a new ConnectN board with dimensions and N value copied from another board.
+     * @param otherBoard is a board.
+
+     */
+    public ConnectN(final ConnectN otherBoard) {
+        this.width = otherBoard.width;
+        this.height = otherBoard.height;
+        this.n = otherBoard.n;
+        this.id = totalGames;
+        totalGames++;
+
+        this.board = new Player[this.width][this.height];
+    }
+    /**
+     * Create a new ConnectN board with given width and height and uninitialized N value.
+     *@param setWidth sets the width.
+     *@param setHeight provides the height value.
+     */
+    public ConnectN(final int setWidth, final int setHeight) {
+        if (setWidth >= MIN_WIDTH && setWidth <= MAX_WIDTH) {
+            this.width = setWidth;
+        }
+        if (setHeight >= MIN_HEIGHT && setHeight <= MAX_HEIGHT) {
+            this.height = setHeight;
+        }
+        this.id = totalGames;
+        totalGames++;
+
+        this.board = new Player[this.width][this.height];
+
+    }
+    /**
+     * Creates a new ConnectN board with a given width, height, and N value.
+     * @param setWidth sets the width.
+     * @param setHeight sets the height.
+     * @param setN set the n value.
+     */
+    public ConnectN(final int setWidth, final int setHeight, final int setN) {
+        if (setWidth >= MIN_WIDTH && setWidth <= MAX_WIDTH) {
+            this.width = setWidth;
+        }
+        if (setHeight >= MIN_HEIGHT && setHeight <= MAX_HEIGHT) {
+            this.height = setHeight;
+        }
+        if (this.width != 0 && this.height != 0
+                && setN >= MIN_N && setN <= this.width
+                && setN <= this.height) {
+            this.n = setN;
+        }
+        this.id = totalGames;
+        totalGames++;
+
+        this.board = new Player[this.width][this.height];
+    }
+
+
+    /**
+     * @return return a variable.
+     * @param boards are the boards we want to compare.
+     */
+    public static boolean compareBoards(final ConnectN... boards) {
+
+        if (boards.length == 1) {
+            return true;
+        }
+        for (int i = 0; i < boards.length; i++) {
+            if (((boards[1].width == boards[i].width)
+                    && (boards[1].height == boards[i].height)
+                    && (boards[1].n == boards[i].n)) == false) {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+    /**
+     * @param firstBoard is the first board.
+     * @param secondBoard is the second board.
+     */
+    public static boolean compareBoards(final ConnectN firstBoard, final ConnectN secondBoard) {
+        if (firstBoard != null && secondBoard != null) {
+            boolean identical = (firstBoard.width == secondBoard.width)
+                && (firstBoard.height == secondBoard.height)
+                && (firstBoard.n == secondBoard.n);
+            if (identical == true) {
+                for (int i = 0; i < firstBoard.width; i++) {
+                    for (int j = 0; j < firstBoard.height; j++) {
+                        if (firstBoard.board[i][j] != secondBoard.board[i][j]) {
+                            return false;
+                        }
+                    }
+                }
+            } else {
+                return false;
+            }
+
+            return identical;
+        } else {
+            return false;
+        }
+
+    }
+    /**
+     * @param width is the value for width.
+     * @param height is the value for height.
+     * @param n is the value for n.
+     */
+    public static ConnectN create(final int width, final int height, final int n) {
+        ConnectN temp = new ConnectN();
+        if (height >= MIN_HEIGHT && height <= MAX_HEIGHT) {
+            temp.height = height;
+        } else {
+            return null;
+        }
+        if (width >= MIN_WIDTH && width <= MAX_WIDTH) {
+            temp.width = width;
+        } else {
+            return null;
+        }
+        int greater = width;
+        if (width < height) {
+            greater = height;
+        }
+        if (n >= MIN_N && n < greater) {
+            temp.n = n;
+        } else {
+            return null;
+        }
+        return temp;
+
+    }
+    /**
+     * @param number is the number of elements in the array.
+     * @param width is the value of width.
+     * @param height is the value of height.
+     * @param n is the n value of the new object.
+     */
+    public static ConnectN[] createMany(final int number, final int width,
+            final int height, final int n) {
+        ConnectN[] temp = new ConnectN[number];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = new ConnectN();
+            temp[i].height = height;
+            temp[i].width = width;
+            temp[i].n = n;
+        }
+        return temp;
+    }
+    /**
+     * @return return a variable.
+     * @param obj is the object being passed to the subroutine.
+     */
+    public boolean equals(final java.lang.Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ConnectN other = (ConnectN) obj;
+        if (id == other.id) {
+            return true;
+        }
+        return false;
+
+
+    }
+   
+    public Player[][] getBoard() {
+        if (this.width != 0 && this.height != 0) {
+            Player[][] boardCopy = new Player[this.board.length][this.board[0].length];
+            for (int i = 0; i < this.board.length; i++) {
+                for (int j = 0; j < this.board[0].length; j++) {
+                    if (this.board[i][j] != null) {
+                        boardCopy[i][j] = new Player(this.board[i][j]);
+                    }
+                }
+            }
+            return boardCopy;
+        } else {
+            return null;
+        }
+
+    }
+    /**
+     * @param getX is the x indices of the position we want.
+     * @param getY is the y indices of the position we want.
+     */
+    public Player getBoardAt(final int getX, final int getY) {
+        if (getX >= 0 && getX < this.width && getY >= 0 && getY < this.height) {
+            return this.board[getX][getY];
+        } else {
+            return null;
+        }
+    }
+  
+    public int getHeight() {
+        return height;
+    }
+  
+    public int getID() {
+        return id;
+    }
+  
+    public int getN() {
+        return n;
+    }
+    
+    public static int getTotalGames() {
+        return totalGames;
+    }
+   
+    public int getWidth() {
+        return width;
+    }
+   
+    public Player getWinner() {
+        return this.winner;
+    }
+   
+    public final int hashCode() {
+        return this.id;
+    }
+    /**
+     * @param player is the play we are dealing with.
+     * @param setX sets the X value.
+     */
+    public boolean setBoardAt(final Player player, final int setX) {
+        boolean condition = false;
+        if (this.width != 0 && this.height != 0
+                && setX < this.width && setX >= 0
+                && this.board[setX][this.board[0].length - 1] == null
+                && this.ended == false) {
+           condition = true;
+        }
+        if (condition == true) {
+            int y = this.board[0].length - 1;
+            while (y != 0 && this.board[setX][y - 1] == null) {
+                y--;
+            }
+            this.board[setX][y] = player;
+            this.started = true;
+            if (this.win() == true) {
+                this.winner = player;
+                this.ended = true;
+                player.addScore();
+            }
+
+
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+    /**
+     * @param player is the play we are dealing with.
+     * @param setX sets the X value.
+     * @param setY sets the Y value.
+     *
+     */
+    public boolean setBoardAt(final Player player, final int setX, final int setY) {
+        boolean condition = false;
+        if (this.width != 0 && this.height != 0
+                && setX < this.width && setY < this.height
+                && setX >= 0 && setY >= 0 && this.board[setX][setY] == null
+                && this.ended == false) {
+           condition = true;
+        }
+        if (condition == true) {
+            int y = setY;
+            if (setY != 0) {
+                 if (this.board[setX][y - 1] == null) {
+                    return false;
+                 } else {
+                     this.board[setX][y] = player;
+                     this.started = true;
+                     if (this.win() == true) {
+                         this.winner = player;
+                         this.ended = true;
+                         player.addScore();
+                     }
+                     return true;
+                 }
+            } else {
+                this.board[setX][y] = player;
+                this.started = true;
+                if (this.win() == true) {
+                    this.winner = player;
+                    this.ended = true;
+                    player.addScore();
+                }
+                return true;
+            }
+
+        } else {
+            return false;
+        }
+
+
+    }
+    /**
+     * @param setHeight sets the new height value.
+     */
+    public boolean setHeight(final int setHeight) {
+        if (setHeight >= MIN_HEIGHT && setHeight <= MAX_HEIGHT && this.started == false) {
+            this.height = setHeight;
+
+            if (this.width != 0) {
+                this.board = new Player[this.width][this.height];
+            }
+            int greater = this.width;
+            if (this.width < this.height) {
+                greater = this.height;
+            }
+            if (greater <= this.n) {
+                this.n = 0;
+            }
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+    /**
+     * @param newN set the n vlaue.
+     */
+    public boolean setN(final int newN) {
+        int greater = this.width;
+        if (this.width < this.height) {
+            greater = this.height;
+        }
+        if (this.width != 0 && this.height != 0
+                && newN >= MIN_N && newN < greater
+                && this.started == false) {
+            this.n = newN;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * @param setWidth set the width.
+     */
+    public boolean setWidth(final int setWidth) {
+        if (setWidth >= MIN_WIDTH && setWidth <= MAX_WIDTH && this.started == false) {
+            this.width = setWidth;
+
+            if (this.height != 0) {
+                this.board = new Player[this.width][this.height];
+            }
+            int greater = this.width;
+            if (this.width < this.height) {
+                greater = this.height;
+            }
+            if (greater <= this.n) {
+                this.n = 0;
+            }
+            return true;
+        } else {
+
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+
+}
+
